@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#8b7cff" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%238b7cff'/%3E%3Cstop offset='1' stop-color='%23a594ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='12' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E📖%3C/text%3E%3C/svg%3E" />
+  <title>📚 一键电子书 · 一键生成精美电子书</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 背景：紫色渐变 + 装饰气泡 -->
+  <div id="home-view" class="view active">
+  <div class="bg-decor">
+    <div class="bubble bubble-1"></div>
+    <div class="bubble bubble-2"></div>
+    <div class="bubble bubble-3"></div>
+    <div class="bubble bubble-4"></div>
+    <div class="bubble bubble-5"></div>
+    <div class="sparkle sparkle-1">✦</div>
+    <div class="sparkle sparkle-2">✧</div>
+    <div class="sparkle sparkle-3">✦</div>
+    <div class="sparkle sparkle-4">✧</div>
+    <div class="bg-book bg-book-1"></div>
+    <div class="bg-book bg-book-2"></div>
+  </div>
+
+  <!-- 顶部导航 -->
+  <header class="top-nav">
+    <div class="logo">
+      <div class="logo-icon">📖</div>
+      <div class="logo-text">
+        <div class="logo-title">一键电子书</div>
+        <div class="logo-subtitle">一键生成精美电子书，轻松出版你的作品</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-pro">👑 专业版</button>
+      <button class="btn-avatar">👤</button>
+    </div>
+  </header>
+
+  <!-- 主内容：左右分栏 -->
+  <main class="main-grid">
+    <!-- 左侧：步骤区 -->
+    <div class="left-col">
+
+      <!-- 步骤 1：输入源文件 -->
+      <section class="glass-card" id="step1">
+        <div class="step-head">
+          <div class="step-num">01</div>
+          <div class="step-info">
+            <h2>输入源文件</h2>
+            <p>支持多种文档格式</p>
+          </div>
+        </div>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.epub,.md,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden />
+          <div class="upload-prompt">
+            <div class="upload-icon-wrap">
+              <div class="upload-icon">📄</div>
+              <div class="upload-cloud">☁</div>
+            </div>
+            <p class="upload-title">点击或拖拽文件到此处</p>
+            <p class="upload-hint">支持 PDF、Word、TXT、EPUB、MD 等</p>
+          </div>
+        </div>
+        <div id="fileInfo" class="file-info hidden"></div>
+        <div id="wordCountWarn" class="warn hidden"></div>
+      </section>
+
+      <!-- 步骤 2：选择封面 -->
+      <section class="glass-card disabled" id="step2">
+        <div class="step-head">
+          <div class="step-num">02</div>
+          <div class="step-info">
+            <h2>选择封面生成方式</h2>
+            <p>上传或 AI 生成精美封面</p>
+          </div>
+        </div>
+        <div class="cover-options">
+          <div class="cover-option" data-method="upload">
+            <div class="cover-opt-icon upload-icon-bg">🖼️</div>
+            <div class="cover-opt-text">
+              <div class="cover-opt-title">上传封面</div>
+              <div class="cover-opt-sub">上传本地图片作为封面</div>
+            </div>
+            <div class="cover-opt-radio"></div>
+          </div>
+          <div class="cover-option active" data-method="ai">
+            <div class="cover-opt-icon ai-icon-bg">✨</div>
+            <div class="cover-opt-text">
+              <div class="cover-opt-title">AI 生成封面</div>
+              <div class="cover-opt-sub">使用 AI 智能生成精美封面</div>
+            </div>
+            <div class="cover-opt-radio"></div>
+          </div>
+        </div>
+
+        <!-- 上传封面 -->
+        <div id="uploadCoverPanel" class="cover-panel">
+          <div class="upload-area small" id="coverUploadArea">
+            <input type="file" id="coverInput" accept="image/*" hidden />
+            <p>点击上传封面图片</p>
+            <p class="upload-hint">支持 JPG / PNG / WebP / GIF</p>
+          </div>
+          <div id="uploadCoverPreview" class="cover-preview" style="margin-top:12px;min-height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.4);border:1px dashed rgba(139,124,255,0.3);border-radius:12px;">
+            <span class="placeholder" style="color:#a89cd9;font-size:13px;padding:16px;">未选择图片</span>
+          </div>
+        </div>
+
+        <!-- AI 封面 -->
+        <div id="aiCoverPanel" class="cover-panel active">
+          <p class="hint">📌 AI 将根据文档主题自动绘制精美封面</p>
+          <div id="aiCoverPreview" class="cover-preview" style="margin-top:12px;min-height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.4);border:1px dashed rgba(139,124,255,0.3);border-radius:12px;">
+            <span class="placeholder" style="color:#a89cd9;font-size:13px;padding:16px;">🎨 封面将在生成时自动绘制</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 步骤 3：生成设置 -->
+      <section class="glass-card disabled" id="step3">
+        <div class="step-head">
+          <div class="step-num">03</div>
+          <div class="step-info">
+            <h2>生成设置</h2>
+            <p>可自定义更多选项（可选）</p>
+          </div>
+        </div>
+        <div class="settings-list">
+          <div class="setting-row" id="rowTitle">
+            <div class="setting-icon">📖</div>
+            <span class="setting-label">书名</span>
+            <input type="text" class="setting-input" id="bookTitle" placeholder="自动从文档提取" />
+            <span class="setting-arrow">›</span>
+          </div>
+          <div class="setting-row" id="rowAuthor">
+            <div class="setting-icon">👤</div>
+            <span class="setting-label">作者</span>
+            <input type="text" class="setting-input" id="bookAuthor" placeholder="自动识别或留白" />
+            <span class="setting-arrow">›</span>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">📐</div>
+            <span class="setting-label">页面尺寸</span>
+            <select class="setting-select" id="pageSize">
+              <option value="phone" selected>手机版（9:16）</option>
+              <option value="a5">A5（148×210mm）</option>
+              <option value="kindle">Kindle（6寸）</option>
+            </select>
+            <span class="setting-arrow">›</span>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon">🎨</div>
+            <span class="setting-label">主题风格</span>
+            <select class="setting-select" id="themeStyle">
+              <option value="simple" selected>简约·清新</option>
+              <option value="elegant">典雅·文艺</option>
+              <option value="warm">温暖·治愈</option>
+            </select>
+            <span class="setting-arrow">›</span>
+          </div>
+          <div class="setting-row more-row" id="moreRow">
+            <div class="setting-icon">⚙️</div>
+            <span class="setting-label">更多设置</span>
+            <span class="setting-arrow rotate" id="moreArrow">›</span>
+          </div>
+          <div class="more-settings hidden" id="moreSettings">
+            <div class="setting-row inline">
+              <div class="setting-icon">📝</div>
+              <span class="setting-label">字体大小</span>
+              <select class="setting-select" id="fontSize">
+                <option value="small">小</option>
+                <option value="medium" selected>中</option>
+                <option value="large">大</option>
+                <option value="xlarge">超大</option>
+              </select>
+            </div>
+            <div class="setting-row inline">
+              <div class="setting-icon">🌗</div>
+              <span class="setting-label">默认配色</span>
+              <select class="setting-select" id="defaultTheme">
+                <option value="light" selected>白天</option>
+                <option value="sepia">护眼</option>
+                <option value="dark">夜晚</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 一键生成按钮 -->
+      <button class="btn-generate" id="generateBtn" disabled>
+        <span class="btn-shine"></span>
+        <span class="btn-content">✨ 一键生成电子书</span>
+      </button>
+      <p class="safety-tip">🔒 安全生成，仅供个人使用</p>
+    </div>
+
+    <!-- 右侧：实时预览 -->
+    <aside class="right-col">
+      <div class="preview-card">
+        <div class="preview-head">
+          <div class="preview-status" id="previewStatus">
+            <span class="status-dot"></span>
+            <span class="status-text">等待上传</span>
+          </div>
+          <div class="preview-tabs">
+            <button class="preview-tab active" data-tab="cover">封面预览</button>
+          </div>
+        </div>
+
+        <!-- 主预览：3D 书本 -->
+        <div class="preview-stage">
+          <div class="book-3d" id="book3d">
+            <div class="book-shadow"></div>
+            <div class="book-spine"></div>
+            <div class="book-back"></div>
+            <div class="book-pages-stack"></div>
+            <div class="book-front" id="bookFront">
+              <div class="book-cover-inner" id="bookCoverInner">
+                <div class="cover-placeholder">
+                  <div class="placeholder-icon">📖</div>
+                  <p>上传文档后<br>在此预览封面</p>
+                </div>
+              </div>
+            </div>
+            <div class="book-top"></div>
+            <div class="book-bottom"></div>
+            <div class="book-platform"></div>
+          </div>
+          <div class="book-glow"></div>
+        </div>
+
+        <!-- 缩略图轮播：封面 / 目录 / 内页 -->
+        <div class="thumbs" id="thumbs">
+          <div class="thumb active" data-thumb="cover">
+            <div class="thumb-label">封面</div>
+            <div class="thumb-img" id="thumbCover">
+              <div class="thumb-placeholder">封面</div>
+            </div>
+          </div>
+          <div class="thumb" data-thumb="toc">
+            <div class="thumb-label">目录</div>
+            <div class="thumb-img" id="thumbToc">
+              <div class="thumb-placeholder">目录</div>
+            </div>
+          </div>
+          <div class="thumb" data-thumb="page">
+            <div class="thumb-label">内页</div>
+            <div class="thumb-img" id="thumbPage">
+              <div class="thumb-placeholder">内页</div>
+            </div>
+          </div>
+          <div class="thumb" data-thumb="qr">
+            <div class="thumb-label">分享卡</div>
+            <div class="thumb-img" id="thumbQr">
+              <div class="thumb-placeholder">分享</div>
+            </div>
+          </div>
+        </div>
+        <div class="thumbs-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <!-- 文件信息卡 -->
+        <div class="file-meta">
+          <div class="meta-row">
+            <span class="meta-icon">📄</span>
+            <span class="meta-label">文件名：</span>
+            <span class="meta-value" id="metaFilename">未选择</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">📊</span>
+            <span class="meta-label">字数：</span>
+            <span class="meta-value" id="metaWords">—</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">⏱️</span>
+            <span class="meta-label">预计生成时间：</span>
+            <span class="meta-value" id="metaTime">约 1 分钟</span>
+          </div>
+          <div class="meta-hint">ⓘ 实际时间可能因文件大小和网络状况有所不同</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 加载层 -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p class="loading-title">电子书生成中，请耐心等候……</p>
+      <p class="loading-sub">正在解析文档 · 重新排版 · 绘制封面 · 生成二维码</p>
+      <div class="loading-progress" id="loadingProgress">
+        <div class="loading-step" data-step="parse">① 解析文档</div>
+        <div class="loading-step" data-step="reflow">② 重新排版</div>
+        <div class="loading-step" data-step="cover">③ 绘制封面</div>
+        <div class="loading-step" data-step="qrcode">④ 生成二维码</div>
+        <div class="loading-step" data-step="poster">⑤ 合成海报</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 结果弹层 -->
+  <div id="resultModal" class="result-modal hidden">
+    <div class="result-modal-content">
+      <button class="result-close" id="resultClose">×</button>
+      <h2>🎉 电子书已生成</h2>
+      <img id="posterImage" class="poster" alt="电子书封面海报" />
+      <p class="result-tip" id="resultTip"></p>
+      <div class="result-actions">
+        <a id="downloadBtn" class="btn primary" download="ebook-poster.png">📥 下载海报</a>
+        <a id="openEbookBtn" class="btn secondary" target="_blank">📖 打开电子书</a>
+        <button id="copyUrlBtn" class="btn ghost">📋 复制链接</button>
+        <button id="resetBtn" class="btn ghost">🔄 再做一本</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== 电子书查看器 =================== -->
+  <div id="ebook-view" class="view">
+    <div class="ebook-container">
+      <div class="ebook-frame" id="ebookFrame">
+        <div class="ebook-header">
+          <button class="icon-btn" id="menuBtn" aria-label="目录">☰</button>
+          <span class="ebook-title" id="ebookTitle">电子书</span>
+          <button class="icon-btn" id="settingsBtn" aria-label="设置">⚙</button>
+        </div>
+        <div class="ebook-content" id="ebookContent">
+          <div class="ebook-loading">正在加载…</div>
+        </div>
+        <div class="ebook-footer">
+          <button class="nav-btn" id="prevBtn">← 上一节</button>
+          <span class="progress" id="progress">1/1</span>
+          <button class="nav-btn" id="nextBtn">下一节 →</button>
+        </div>
+        <div class="sidebar" id="sidebar">
+          <div class="side-header"><h3>📖 目录</h3><button class="icon-btn close-btn" id="closeSidebar">×</button></div>
+          <div class="toc" id="toc"></div>
+        </div>
+        <div class="sidebar" id="settingsPanel">
+          <div class="side-header"><h3>⚙ 阅读设置</h3><button class="icon-btn close-btn" id="closeSettings">×</button></div>
+          <div class="setting-item">
+            <label class="setting-label">字号大小</label>
+            <div class="font-controls">
+              <button data-size="small">小</button>
+              <button data-size="medium" class="active">中</button>
+              <button data-size="large">大</button>
+              <button data-size="xlarge">超大</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <label class="setting-label">阅读配色</label>
+            <div class="theme-controls">
+              <button data-theme="light" class="active">☀️ 白天</button>
+              <button data-theme="sepia">📜 护眼</button>
+              <button data-theme="dark">🌙 夜晚</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <label class="setting-label">行距</label>
+            <div class="line-controls">
+              <button data-line="compact">紧凑</button>
+              <button data-line="normal" class="active">标准</button>
+              <button data-line="loose">宽松</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /#home-view -->
+
+  <!-- 第三方库（本地，离线可用） -->
+  <script src="lib/mammoth.min.js"></script>
+  <script src="lib/pdf.min.js"></script>
+  <script src="lib/qrcode.min.js"></script>
+  <script src="lib/lz-string.min.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>

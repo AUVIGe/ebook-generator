@@ -1,0 +1,93 @@
+From ea1b2d84a8db874d935e6c6f0b7efaf4fac61f02 Mon Sep 17 00:00:00 2001
+From: AUVIGe <AUVIGe@users.noreply.github.com>
+Date: Sun, 7 Jun 2026 15:38:25 +0000
+Subject: [PATCH] =?UTF-8?q?fix:=20=E4=BF=AE=E6=AD=A3=20vercel.json=20?=
+ =?UTF-8?q?=E9=85=8D=E7=BD=AE=EF=BC=8C=E7=A7=BB=E9=99=A4=20rewrites?=
+ =?UTF-8?q?=EF=BC=88=E5=AF=BC=E8=87=B4=20404=EF=BC=89?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+@vercel/static 放在 builds 字段不正确，导致 Vercel 部署后访问 404。
+改为最简配置：只保留 cleanUrls，让 Vercel 自动读 index.html。
+---
+ vercel-deploy-guide.md | 50 ++++++++++++++++++++++++++++++++++++++++++
+ vercel.json            |  9 ++------
+ 2 files changed, 52 insertions(+), 7 deletions(-)
+ create mode 100644 vercel-deploy-guide.md
+
+diff --git a/vercel-deploy-guide.md b/vercel-deploy-guide.md
+new file mode 100644
+index 0000000..3c6c014
+--- /dev/null
++++ b/vercel-deploy-guide.md
+@@ -0,0 +1,50 @@
++# Vercel 部署快速指南
++
++## 最简配置（推荐）
++项目根目录的 `vercel.json`：
++```json
++{
++  "cleanUrls": true,
++  "trailingSlash": false
++}
++```
++
++或者**完全删除 `vercel.json`**，Vercel 会自动识别静态站。
++
++## 目录结构必须这样
++```
++ebook-generator/
++├── index.html          ← 必须根目录
++├── script.js
++├── style.css
++├── lib/
++│   └── *.js
++├── vercel.json         ← 可选
++└── README.md
++```
++
++## ❌ 错误 404: NOT_FOUND 的常见原因
++1. `vercel.json` 用 `builds` 字段但没正确配置 → 改用上面最简配置
++2. 根目录没有 `index.html` → 检查根目录
++3. 文件没上传完整 → 重新部署
++
++## ✅ 部署步骤（重新部署）
++1. Vercel 项目页 → Settings → 删除当前 Build & Development Settings
++2. 删除 `vercel.json` 或保持最简
++3. Deployments → 最新部署右边 "..." → Redeploy
++4. 等 30 秒
++
++## 🔍 如何调试
++访问 Vercel 项目页 → Deployments → 点最新一次 → 看 Build Logs
++- "Build successful" 表示构建成功
++- 404 是运行时错误（找不到文件）
++
++常见修复：
++```json
++// vercel.json (最简版)
++{
++  "cleanUrls": true
++}
++```
++
++如果还有 404，**完全删除 vercel.json**（Vercel 会用默认配置）。
+diff --git a/vercel.json b/vercel.json
+index c75de95..20041ca 100644
+--- a/vercel.json
++++ b/vercel.json
+@@ -1,9 +1,4 @@
+ {
+-  "version": 2,
+-  "builds": [
+-    {
+-      "src": "**/*",
+-      "use": "@vercel/static"
+-    }
+-  ]
++  "cleanUrls": true,
++  "trailingSlash": false
+ }
+-- 
+2.39.5
+
