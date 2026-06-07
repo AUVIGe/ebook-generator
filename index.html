@@ -377,10 +377,12 @@
   </div><!-- /#home-view -->
 
   <!-- 第三方库（本地，离线可用） -->
-  <script src="lib/mammoth.min.js"></script>
   <script src="lib/pdf.min.js"></script>
   <script src="lib/qrcode.min.js"></script>
   <script src="lib/lz-string.min.js"></script>
+  <!-- mammoth 从 CDN 加载（643KB，Vercel 部署可能丢此文件） -->
+  <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"
+          onerror="this.onerror=null;document.dispatchEvent(new Event('mammoth-failed'))"></script>
 
   <script src="script.js"></script>
 </body>

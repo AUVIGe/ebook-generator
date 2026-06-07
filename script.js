@@ -1489,7 +1489,24 @@ function init() {
   // 结果弹层关闭
   $('resultClose').addEventListener('click', () => hide('resultModal'));
   $('resetBtn').addEventListener('click', resetAll);
+  // 尝试自动加载 mammoth（如果主 script 标签加载失败）
+  if (!window.mammoth) {
+    console.warn('mammoth 未在页面加载到，尝试 CDN fallback');
+    loadScript('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js')
+      .catch(() => loadScript('https://cdn.jsdelivr.net/npm/mammoth@1.7.0/mammoth.browser.min.js'))
+      .catch(err => console.warn('mammoth 备用 CDN 也失败', err));
+  }
   handleRoute();
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
 }
 init();
 
