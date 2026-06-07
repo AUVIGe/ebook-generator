@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[user]
+	name = AUVIGe
+	email = AUVIGe@users.noreply.github.com
+[remote "origin"]
+	url = https://github.com/AUVIGe/ebook-generator.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
